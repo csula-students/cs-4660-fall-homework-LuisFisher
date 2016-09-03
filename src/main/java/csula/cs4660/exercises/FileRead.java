@@ -5,7 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * Introduction Java exercise to read file
@@ -61,7 +62,6 @@ public class FileRead {
         catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -97,7 +97,6 @@ public class FileRead {
                 max = current;
             }
         }
-
         return max;
     }
 
@@ -128,5 +127,17 @@ public class FileRead {
         }
 
         return sum;
+    }
+
+    private int[][] converList(List<List<Integer>> arrayList) {
+        int[][] array = new int[arrayList.size()][];
+        for (int i = 0; i < arrayList.size(); i++) {
+            List<Integer> row = arrayList.get(i);
+            array[i] = new int[row.size()];
+            for (int j = 0; j < row.size(); j ++) {
+                array[i][j] = row.get(j);
+            }
+        }
+        return array;
     }
 }
