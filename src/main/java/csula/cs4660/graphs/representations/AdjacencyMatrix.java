@@ -22,6 +22,8 @@ public class AdjacencyMatrix implements Representation {
     private int[][] adjacencyMatrix;
 
     public AdjacencyMatrix(File file) {
+
+        readFile(file);
     }
 
     public AdjacencyMatrix() {
@@ -63,6 +65,10 @@ public class AdjacencyMatrix implements Representation {
 
                 int[] rowValues = new int[length];
 
+                for(int index = 0; index < length; index++) {
+                    rowValues[index] = Integer.parseInt(sRow[index]);
+                }
+
                 adjacencyMatrix[rowValues[0]][rowValues[1]] = rowValues[2];
             }
         }
@@ -77,7 +83,7 @@ public class AdjacencyMatrix implements Representation {
         int xData = (int)x.getData();
         int yData = (int)y.getData();
 
-        return ((adjacencyMatrix[xData][yData] != 0) || (adjacencyMatrix[yData][xData] != 0))
+        return ((adjacencyMatrix[xData][yData] != 0) || (adjacencyMatrix[yData][xData] != 0));
     }
 
     @Override
@@ -107,47 +113,175 @@ public class AdjacencyMatrix implements Representation {
     @Override
     public boolean addNode(Node x) {
 
+        for(int index = 0; index < nodes.length; index++) {
+            if (nodes[index].equals(x)) return false;
+        }
+
         Node[] newNodes = new Node[nodes.length + 1];
         int[][] newMatrix = new int[nodes.length + 1][nodes.length + 1];
 
-        newNodes[nodes.length] = x;
+
 
         for(int index = 0; index < nodes.length; index++) {
             newNodes[index] = nodes[index];
         }
 
+        newNodes[nodes.length] = x;
 
         for(int i = 0;  i < adjacencyMatrix.length; i++) {
+
             for(int j = 0; j < adjacencyMatrix[0].length; j++) {
 
+                newMatrix[i][j] = adjacencyMatrix[i][j];
             }
+
+            newMatrix[i][adjacencyMatrix[0].length] = 0;
         }
 
+        Arrays.fill(newMatrix[adjacencyMatrix.length], 0);
 
         nodes = newNodes;
         adjacencyMatrix = newMatrix;
 
-        return false;
+        return true;
     }
 
     @Override
     public boolean removeNode(Node x) {
-        return false;
+
+        boolean inArray = false;
+        int positionX = 0;
+
+        for(int index = 0; index < nodes.length; index++) {
+            if (nodes[index].equals(x)) {
+                inArray = true;
+                positionX = index;
+                break;
+            }
+        }
+
+        if (!inArray) return false;
+
+        Node[] newNodes = new Node[nodes.length - 1];
+        int[][] newMatrix = new int[nodes.length - 1][nodes.length - 1];
+
+        for(int indexOld = 0, indexNew = 0; indexOld < nodes.length; indexOld++, indexNew++) {
+
+            if (indexOld == positionX) {
+                indexNew--;
+                continue;
+            }
+
+            newNodes[indexNew] = nodes[indexOld];
+        }
+
+        for(int iOld = 0, iNew = 0;  iOld < adjacencyMatrix.length; iOld++, iNew++) {
+
+            if (iOld == positionX) {
+                iNew--;
+                continue;
+            }
+
+            for(int jOld = 0, jNew = 0; jOld < adjacencyMatrix[0].length; jOld++, jNew++) {
+
+                if (jOld == positionX) {
+                    jNew--;
+                    continue;
+                }
+
+                newMatrix[iNew][jNew] = adjacencyMatrix[iOld][jOld];
+            }
+        }
+
+        nodes = newNodes;
+        adjacencyMatrix = newMatrix;
+
+        return true;
     }
 
     @Override
     public boolean addEdge(Edge x) {
+
+        boolean fromInArray = false;
+        boolean toInArray = false;
+
+        int fromPos = 0;
+        int toPos = 0;
+
+        for(int index = 0; index < nodes.length; index++) {
+
+            if (nodes[index].equals(x.getFrom())) {
+                fromInArray = true;
+                fromPos = index;
+            }
+
+            if (nodes[index].equals(x.getTo())) {
+                toInArray = true;
+                toPos = index;
+            }
+        }
+
+        if (fromInArray && toInArray && (adjacencyMatrix[fromPos][toPos] == 0)) {
+            adjacencyMatrix[fromPos][toPos] = x.getValue();
+
+            return true;
+        }
+
         return false;
     }
 
     @Override
     public boolean removeEdge(Edge x) {
+        boolean fromInArray = false;
+        boolean toInArray = false;
+
+        int fromPos = 0;
+        int toPos = 0;
+
+        for(int index = 0; index < nodes.length; index++) {
+
+            if (nodes[index].equals(x.getFrom())) {
+                fromInArray = true;
+                fromPos = index;
+            }
+
+            if (nodes[index].equals(x.getTo())) {
+                toInArray = true;
+                toPos = index;
+            }
+        }
+
+        if (fromInArray && toInArray && (adjacencyMatrix[fromPos][toPos] != 0)) {
+            adjacencyMatrix[fromPos][toPos] = 0;
+            return true;
+        }
+
         return false;
     }
 
     @Override
     public int distance(Node from, Node to) {
-        return 0;
+
+        boolean fromInArray = false;
+        boolean toInArray = false;
+
+        int fromPos = 0;
+        int toPos = 0;
+
+        for(int index = 0; index < nodes.length; index++) {
+
+            if (nodes[index].equals(from)) {
+                fromInArray = true;
+                fromPos = index;
+            }
+
+            if (nodes[index].equals(to)) {
+                toInArray = true;
+                toPos = index;
+            }
+        }
+
+        return adjacencyMatrix[fromPos][toPos];
     }
 
     @Override
