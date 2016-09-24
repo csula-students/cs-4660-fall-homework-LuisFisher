@@ -84,10 +84,9 @@ public class AdjacencyList implements Representation {
     @Override
     public boolean adjacent(Node x, Node y) {
 
-        // should i include?
-        if (!adjacencyList.containsKey(x)) return false;
-
         ArrayList<Edge> edges = (ArrayList)adjacencyList.get(x);
+
+        if (edges == null) return false;
 
         for(Edge e: edges) {
             if (e.getTo().equals(y)) return true;
@@ -99,10 +98,9 @@ public class AdjacencyList implements Representation {
     @Override
     public List<Node> neighbors(Node x) {
 
-        // should i include?
-        if (!adjacencyList.containsKey(x)) return null;
+        ArrayList<Edge> edges = (ArrayList)adjacencyList.get(x);
 
-        ArrayList<Edge> edges = (ArrayList<Edge>)adjacencyList.get(x);
+        if (edges == null) return null;
 
         ArrayList<Node> neighbors = new ArrayList<Node>();
 
