@@ -20,6 +20,7 @@ public class ObjectOriented implements Representation {
     private Collection<Node> nodes;
     private Collection<Edge> edges;
 
+
     public ObjectOriented(File file) {
 
         nodes = new ArrayList<Node>();
@@ -164,6 +165,11 @@ public class ObjectOriented implements Representation {
 
         }
         return 0;
+    }
+
+    @Override
+    public Collection<Node> getNodes() {
+        return nodes;
     }
 
     @Override

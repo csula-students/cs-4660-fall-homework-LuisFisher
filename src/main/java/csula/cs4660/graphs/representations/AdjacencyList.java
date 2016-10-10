@@ -177,6 +177,7 @@ public class AdjacencyList implements Representation {
         return true;
     }
 
+
     @Override
     public int distance(Node from, Node to) {
 
@@ -188,6 +189,12 @@ public class AdjacencyList implements Representation {
         if (edges.get(index).getTo().equals(to)) return edges.get(index).getValue();
         }
         return 0;
+    }
+
+
+    @Override
+    public Collection<Node> getNodes() {
+        return adjacencyList.keySet();
     }
 
     @Override

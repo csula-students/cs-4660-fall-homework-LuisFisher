@@ -1,5 +1,7 @@
 package csula.cs4660.graphs;
 
+import java.util.Comparator;
+
 /**
  * The fundamental class to hold data
  *
@@ -8,6 +10,10 @@ package csula.cs4660.graphs;
  */
 public class Node<T> {
     private final T data;
+
+    // used for search and compare
+    public int distance = Integer.MAX_VALUE;
+    public Node parent = null;
 
     public Node(T data) {
         this.data = data;
