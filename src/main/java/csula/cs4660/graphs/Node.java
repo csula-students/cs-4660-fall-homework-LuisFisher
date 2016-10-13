@@ -12,9 +12,8 @@ public class Node<T> {
     private final T data;
 
     // used for search and compare
-    public int distance = Integer.MAX_VALUE;
-    public int g = 0;
-    public int h = 0;
+    public double g = Integer.MAX_VALUE;
+    public double h = 0;
     public Node parent = null;
 
     public Node(T data) {

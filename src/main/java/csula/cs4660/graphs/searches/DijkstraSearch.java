@@ -26,21 +26,20 @@ public class DijkstraSearch implements SearchStrategy {
         Node srcNode = null;
 
         for(Node node: nodeCollection) {
-            node.distance = Integer.MAX_VALUE;
-            node.parent = null;
 
-            node.g = 0;
+            node.parent = null;
+            node.g = Integer.MAX_VALUE;
             node.h = 0;
 
             if (node.equals(source)) {
-                node.distance = 0;
+                node.g = 0;
                 srcNode = node;
             }
         }
 
         nodes.offer(srcNode);
 
-        int alt = 0;
+        double alt = 0;
         Node parent = null;
         Node endNode = null;
 
@@ -54,15 +53,15 @@ public class DijkstraSearch implements SearchStrategy {
                     nodes.offer(child);
                 }
 
-                if (child.distance == Integer.MAX_VALUE) {
-                    child.distance = graph.distance(parent, child);
+                if (child.g == Integer.MAX_VALUE) {
+                    child.g = graph.distance(parent, child);
                     child.parent = parent;
                 }
 
-                alt = parent.distance + graph.distance(parent, child);
+                alt = parent.g + graph.distance(parent, child);
 
-                if (alt < child.distance) {
-                    child.distance = alt;
+                if (alt < child.g) {
+                    child.g = alt;
                     child.parent = parent;
                 }
 
@@ -80,16 +79,12 @@ public class DijkstraSearch implements SearchStrategy {
         List<Edge> answer = new ArrayList<Edge>();
         Node node = endNode;
 
-        int numSteps = 0;
-
         while (node.parent != null) {
 
             answer.add(new Edge(node.parent, node,
                     graph.distance(node.parent, node)));
 
             node = node.parent;
-            node.h = numSteps;
-            numSteps++;
         }
         return Lists.reverse(answer);
     }

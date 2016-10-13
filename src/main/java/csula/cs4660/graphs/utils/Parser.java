@@ -27,8 +27,6 @@ public class Parser {
         BufferedReader reader;
         String curLine;
 
-
-
         try {
             reader = new BufferedReader(new FileReader(file));
 
@@ -96,11 +94,8 @@ public class Parser {
 
             graph.addAllNode(allNodes);
 
-            System.out.println(x + " " + y);
-
-//            System.out.println(allNodes.size());
-            System.out.println(graph.getNodes().size());
-//
+            System.out.println("width: "+ x + ", height: " + y + ", expected nodes: " + x * y);
+            System.out.println("actual nodes : " + graph.getNodes().size());
 
             System.out.println();
 
@@ -113,43 +108,37 @@ public class Parser {
                 System.out.println();
                 }
 
-//                        Node b = graph.getNode(i + j*y).get();
-//
-//            System.out.println(((Tile)graph.getNode(allNodes.size() - 2 - x).get().getData()).getType());
-
-
             // adds edges to grid
-            // comment out to check for heap issues
-//            for(int j = 0; j < y; j++) {
-//                for(int i = 0; i < x; i++) {
-//
-//                    // should be x*j
-//                    // adds horizontal edges
-//                    if (i > 0) {
-//                        Node l = graph.getNode(i - 1 + j*y).get();
-//                        Node r = graph.getNode(i + j*y).get();
-//
-//                        Edge e1 = new Edge(l,r, 1);
-//                        Edge e2 = new Edge(r,l, 1);
-//
-//                        graph.addEdge(e1);
-//                        graph.addEdge(e2);
-//                    }
-//
-//                    // adds vertical edges
-//                    if (j > 0) {
-//
-//                        Node t = graph.getNode(i + j*y - x).get();
-//                        Node b = graph.getNode(i + j*y).get();
-//
-//                        Edge e1 = new Edge(t,b, 1);
-//                        Edge e2 = new Edge(b,t, 1);
-//
-//                        graph.addEdge(e1);
-//                        graph.addEdge(e2);
-//                    }
-//                }
-//            }
+            for(int j = 0; j < y; j++) {
+                for(int i = 0; i < x; i++) {
+
+                    // should be x*j
+                    // adds horizontal edges
+                    if (i > 0) {
+                        Node l = graph.getNode(i - 1 + j*x).get();
+                        Node r = graph.getNode(i + j*y).get();
+
+                        Edge e1 = new Edge(l,r, 1);
+                        Edge e2 = new Edge(r,l, 1);
+
+                        graph.addEdge(e1);
+                        graph.addEdge(e2);
+                    }
+
+                    // adds vertical edges
+                    if (j > 0) {
+
+                        Node t = graph.getNode(i + j*x - x).get();
+                        Node b = graph.getNode(i + j*x).get();
+
+                        Edge e1 = new Edge(t,b, 1);
+                        Edge e2 = new Edge(b,t, 1);
+
+                        graph.addEdge(e1);
+                        graph.addEdge(e2);
+                    }
+                }
+            }
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -159,7 +148,24 @@ public class Parser {
     }
 
     public static String converEdgesToAction(Collection<Edge> edges) {
-        // TODO: convert a list of edges to a list of action
-        return "";
+
+        String path = "";
+
+        for (Edge e: edges ) {
+
+            Tile from = (Tile)e.getFrom().getData();
+            Tile to = (Tile)e.getTo().getData();
+
+            int dx = from.getX() - to.getX();
+            int dy = from.getY() - to.getY();
+
+            //NEWS
+            if (dy == 1) path += 'N';
+            else if (dx == -1) path += 'E';
+            else if (dx == 1) path += 'W';
+            else path+= 'S';
+
+        }
+        return path;
     }
 }

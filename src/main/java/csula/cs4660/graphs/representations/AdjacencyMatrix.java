@@ -160,7 +160,6 @@ public class AdjacencyMatrix implements Representation {
         int newSize = oldSize  + toAdd.size();
 
         Node[] newNodes = new Node[newSize];
-        int[][] newMatrix = new int[newSize][newSize];
 
         for (int index = 0; index < newSize; index++) {
 
@@ -172,6 +171,10 @@ public class AdjacencyMatrix implements Representation {
             }
         }
 
+        nodes = newNodes;
+
+        int[][] newMatrix = new int[newSize][newSize];
+
         for(int i = 0;  i < adjacencyMatrix.length; i++) {
 
             for(int j = 0; j < adjacencyMatrix[0].length; j++) {
@@ -181,7 +184,6 @@ public class AdjacencyMatrix implements Representation {
         }
 
         adjacencyMatrix = newMatrix;
-        nodes = newNodes;
 
         return added;
     }

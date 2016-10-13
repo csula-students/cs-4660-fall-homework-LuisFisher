@@ -21,7 +21,7 @@ public class BFS implements SearchStrategy {
         Queue<Node> nodes = new LinkedList<Node>();
 
         for(Node n: nodeCollection) {
-            n.distance = Integer.MAX_VALUE;
+            n.g = Integer.MAX_VALUE;
             n.parent = null;
         }
 
@@ -31,7 +31,7 @@ public class BFS implements SearchStrategy {
 
                 if (node.equals(source)) {
 
-                    node.distance = 0;
+                    node.g = 0;
                     node.parent = null;
                     nodes.offer(source);
                     break;
@@ -50,8 +50,8 @@ public class BFS implements SearchStrategy {
 
                 nodes.offer(child);
 
-                if (child.distance == Integer.MAX_VALUE) {
-                    child.distance = graph.distance(parent, child);
+                if (child.g == Integer.MAX_VALUE) {
+                    child.g = graph.distance(parent, child);
                     child.parent = parent;
                 }
 
