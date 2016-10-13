@@ -56,6 +56,8 @@ public interface Representation {
 
     boolean addNode(Node x);
 
+    boolean addAllNode(List<Node> x);
+
     boolean removeNode(Node x);
 
     boolean addEdge(Edge x);

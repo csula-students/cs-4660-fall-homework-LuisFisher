@@ -23,15 +23,18 @@ import java.util.*;
 public class AdjacencyList implements Representation {
 
     private Map<Node, Collection<Edge>> adjacencyList;
+    ArrayList<Node> indexedNodes;
 
     public AdjacencyList(File file) {
 
+        indexedNodes = new ArrayList<Node>();
         adjacencyList = new HashMap<Node, Collection<Edge>>();
         readFile(file);
     }
 
     public AdjacencyList() {
 
+        indexedNodes = new ArrayList<Node>();
         adjacencyList = new HashMap<Node, Collection<Edge>>();
     }
 
@@ -56,6 +59,8 @@ public class AdjacencyList implements Representation {
                 tempNode = new Node(index);
 
                 nodes.add(tempNode);
+
+                indexedNodes.add(tempNode);
                 adjacencyList.put(tempNode, new ArrayList<Edge>());
             }
 
@@ -116,10 +121,29 @@ public class AdjacencyList implements Representation {
 
         if (adjacencyList.containsKey(x)) return false;
 
+        indexedNodes.add(x);
         adjacencyList.put(x, new ArrayList<Edge>());
 
         return true;
     }
+
+
+    @Override
+    public boolean addAllNode(List<Node> x) {
+
+        boolean added = false;
+
+        for (Node n: x) {
+            if (!adjacencyList.containsKey(n))  {
+                adjacencyList.put(n, new ArrayList<Edge>());
+                indexedNodes.add(n);
+                added = true;
+            }
+        }
+
+        return added;
+    }
+
 
     @Override
     public boolean removeNode(Node x) {
@@ -131,6 +155,7 @@ public class AdjacencyList implements Representation {
 
         /* remove all the from x edges */
         adjacencyList.remove(x);
+        indexedNodes.remove(x);
 
         keys = new Node[adjacencyList.size()];
 
@@ -199,6 +224,9 @@ public class AdjacencyList implements Representation {
 
     @Override
     public Optional<Node> getNode(int index) {
-        return null;
+
+        Node n = indexedNodes.get(index);
+
+        return Optional.of(n);
     }
 }

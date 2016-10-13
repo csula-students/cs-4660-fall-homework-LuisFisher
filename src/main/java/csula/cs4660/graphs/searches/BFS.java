@@ -58,21 +58,27 @@ public class BFS implements SearchStrategy {
                 if (child.equals(dist)) {
                     endNode = child;
                 }
-
             }
         }
 
-        int distance = 0;
+        return constructPath(graph, endNode);
+    }
 
-        while (endNode.parent != null) {
 
-            distance = endNode.distance;
+    private List<Edge> constructPath(Graph graph, Node endNode) {
 
-            answer.add(new Edge(endNode.parent, endNode, distance));
+        List<Edge> answer = new ArrayList<Edge>();
+        Node node = endNode;
 
-            endNode = endNode.parent;
+        while (node.parent != null) {
+
+            answer.add(new Edge(node.parent, node,
+                    graph.distance(node.parent, node)));
+
+            node = node.parent;
         }
-
         return Lists.reverse(answer);
     }
 }
+
+

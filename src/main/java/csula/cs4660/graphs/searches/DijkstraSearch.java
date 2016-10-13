@@ -13,36 +13,34 @@ import java.util.*;
  */
 public class DijkstraSearch implements SearchStrategy {
 
-    Set<Node>sGraph;
 
     @Override
     public List<Edge> search(Graph graph, Node source, Node dist) {
 
         List<Edge> answer = new ArrayList<Edge>();
+
         Collection<Node> nodeCollection = graph.getNodes();
 
-        Comparator<Node> comparator = new NodeComparator();
-        PriorityQueue<Node> nodes = new PriorityQueue<Node>(comparator);
+        Queue<Node> nodes = new PriorityQueue<>(new NodeComparator());
 
-        for(Node n: nodeCollection) {
-            n.distance = Integer.MAX_VALUE;
-            n.parent = null;
-        }
+        Node srcNode = null;
 
-        if (nodeCollection.contains(source)) {
+        for(Node node: nodeCollection) {
+            node.distance = Integer.MAX_VALUE;
+            node.parent = null;
 
-            for(Node node: nodeCollection) {
+            node.g = 0;
+            node.h = 0;
 
-                if (node.equals(source)) {
-
-                    node.distance = 0;
-                    node.parent = null;
-                    nodes.offer(source);
-                    break;
-                }
+            if (node.equals(source)) {
+                node.distance = 0;
+                srcNode = node;
             }
         }
 
+        nodes.offer(srcNode);
+
+        int alt = 0;
         Node parent = null;
         Node endNode = null;
 
@@ -50,44 +48,49 @@ public class DijkstraSearch implements SearchStrategy {
 
             parent = nodes.poll();
 
-            int alt = 0;
-
             for(Node child: graph.neighbors(parent)) {
+
+                if (!nodes.contains(child)) {
+                    nodes.offer(child);
+                }
 
                 if (child.distance == Integer.MAX_VALUE) {
                     child.distance = graph.distance(parent, child);
                     child.parent = parent;
                 }
 
-                if (nodes.contains(child)) {
+                alt = parent.distance + graph.distance(parent, child);
 
-                    alt = parent.distance + child.distance;
-
-                    if (alt < child.distance) {
-                        child.distance = alt;
-                        child.parent = parent;
-                    }
+                if (alt < child.distance) {
+                    child.distance = alt;
+                    child.parent = parent;
                 }
 
                 if (child.equals(dist)) {
                     endNode = child;
                 }
-
-                nodes.offer(child);
             }
         }
 
-        int distance = 0;
+        return constructPath(graph, endNode);
+    }
 
-        while (endNode.parent != null) {
+    private List<Edge> constructPath(Graph graph, Node endNode) {
 
-            distance = endNode.distance;
+        List<Edge> answer = new ArrayList<Edge>();
+        Node node = endNode;
 
-            answer.add(new Edge(endNode.parent, endNode, distance));
+        int numSteps = 0;
 
-            endNode = endNode.parent;
+        while (node.parent != null) {
+
+            answer.add(new Edge(node.parent, node,
+                    graph.distance(node.parent, node)));
+
+            node = node.parent;
+            node.h = numSteps;
+            numSteps++;
         }
-
         return Lists.reverse(answer);
     }
 }

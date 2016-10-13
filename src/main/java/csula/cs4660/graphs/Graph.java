@@ -95,6 +95,10 @@ public class Graph {
         return strategy.search(this, source, dist);
     }
 
+    public boolean addAllNode(List<Node> x) {
+        return strategy.addAllNode(x);
+    }
+
 
     @Override
     public String toString() {

@@ -15,16 +15,14 @@ import java.util.*;
  * TODO: please fill the method body of this class
  */
 public class AdjacencyMatrix implements Representation {
-    private Node[] nodes;
-    private int[][] adjacencyMatrix;
+    private Node[] nodes = {};
+    private int[][] adjacencyMatrix = {};
 
     public AdjacencyMatrix(File file) {
-
         readFile(file);
     }
 
     public AdjacencyMatrix() {
-
     }
 
     private void readFile(File file) {
@@ -51,7 +49,8 @@ public class AdjacencyMatrix implements Representation {
             }
 
             for(int index = 0; index < nodes.length; index++) {
-                nodes[index] = new Node<Integer>(index);
+                Node node = new Node<Integer>(index);
+                nodes[index] = node;
             }
 
             while ((curLine = reader.readLine()) != null) {
@@ -141,6 +140,50 @@ public class AdjacencyMatrix implements Representation {
         adjacencyMatrix = newMatrix;
 
         return true;
+    }
+
+    @Override
+    public boolean addAllNode(List<Node> x) {
+
+        boolean added = false;
+        List<Node> temp = Arrays.asList(nodes);
+
+        List<Node> toAdd = new ArrayList<Node>();
+        for (Node n: x) {
+            if (!temp.contains(n))  {
+                toAdd.add(n);
+                added = true;
+            }
+        }
+
+        int oldSize = nodes.length;
+        int newSize = oldSize  + toAdd.size();
+
+        Node[] newNodes = new Node[newSize];
+        int[][] newMatrix = new int[newSize][newSize];
+
+        for (int index = 0; index < newSize; index++) {
+
+            if (index < oldSize) {
+                newNodes[index] = nodes[index];
+            }
+            else {
+                newNodes[index] = x.get(index - oldSize);
+            }
+        }
+
+        for(int i = 0;  i < adjacencyMatrix.length; i++) {
+
+            for(int j = 0; j < adjacencyMatrix[0].length; j++) {
+
+                newMatrix[i][j] = adjacencyMatrix[i][j];
+            }
+        }
+
+        adjacencyMatrix = newMatrix;
+        nodes = newNodes;
+
+        return added;
     }
 
     @Override
@@ -288,6 +331,6 @@ public class AdjacencyMatrix implements Representation {
 
     @Override
     public Optional<Node> getNode(int index) {
-        return null;
+        return Optional.of(nodes[index]);
     }
 }
