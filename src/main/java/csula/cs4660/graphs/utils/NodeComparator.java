@@ -10,11 +10,7 @@ import java.util.Comparator;
 public class NodeComparator implements Comparator<Node> {
 
     @Override
-    public int compare(Node o1, Node o2) {
-
-        double f1 = o1.g + o1.h;
-        double f2 = o2.g + o2.h;
-
-        return (int)(f2 - f1);
+    public int compare(Node o1, Node o2){
+        return (int)(o2.g + o2.h - o1.g - o1.h);
     }
 }

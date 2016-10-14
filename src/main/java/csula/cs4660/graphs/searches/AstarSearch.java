@@ -15,61 +15,11 @@ import java.util.*;
 public class AstarSearch implements SearchStrategy {
 
     // D is a scale value for you to adjust performance vs accuracy
-    private final double D = 1.5;
-
-
-    /*
-
-    function AstarSearch(start, goal) {
-    // create empty queue Q
-    var frontier = new Queue();
-    var exploredSet = new HashSet();
-    var parents = new Map();
-
-    // use priority queue instead of normal queue
-    frontier.enqueue(v);
-
-    // initialize gScore and hScore
-    gScore = new Map(); // given every cost is infinite by default
-    gScore.put(start, 0);
-
-    fScore = new Map();
-    fScore.put(start, heuristicCost(start, goal));
-
-    while (!frontier.isEmpty()) {
-        // pop with the lowest fScore
-        var u = queue.dequeue();
-        if (u === goal) {
-          return constructPath(u)
-        }
-        exploredSet.push(u);
-
-        for (node in Graph.neighbors(u)) {
-            if (exploredSet.contains(node)) {
-                continue;
-            }
-            var tempGScore = gScore.get(u) + g(u, node);
-            if (!frontier.contains(node)) {
-                frontier.push(node);
-            } else if (tempGScore >= gScore.get(node)) {
-                continue; // skip because we are at the worse path
-            }
-
-            parent.put(node, u);
-            gScore.put(node, tempGScore);
-            fScore.put(node, gScore.get(node) + heuristicCost(node, goal))
-        }
-    }
-
-    // no answer!
-    return false;
-}
-     */
+    private final double D = 1.0;
 
     @Override
     public List<Edge> search(Graph graph, Node source, Node dist) {
 
-        List<Edge> solution = new ArrayList<Edge>();
         Queue<Node> frontier = new PriorityQueue<>(new NodeComparator());
         Set<Node> exploredSet = new HashSet<Node>();
 
@@ -81,15 +31,13 @@ public class AstarSearch implements SearchStrategy {
         for(Node node: nodeCollection) {
 
             node.parent = null;
-
-            node.g = Integer.MAX_VALUE;
-            node.h = Integer.MAX_VALUE;
+            node.g = Double.MAX_VALUE;
+            node.h = heuristic(node, dist);
 
             // set source g and h values
             if (node.equals(source)) {
-                node.g = 0;
-                node.h = heuristic(source, dist);
                 srcNode = node;
+                node.g = 0;
             }
         }
 
@@ -101,23 +49,23 @@ public class AstarSearch implements SearchStrategy {
         while(!frontier.isEmpty()) {
 
             parent = frontier.poll();
+            exploredSet.add(parent);
 
             if (parent.equals(dist)) {
                 return constructPath(graph, parent);
             }
 
-            exploredSet.add(parent);
-
             for(Node child: graph.neighbors(parent)) {
 
-                Tile childTile = (Tile) child.getData();
-
-                if (childTile.getType() == "##") {
-                    exploredSet.add(child);
+                if (exploredSet.contains(child)) {
                     continue;
                 }
 
-                if (exploredSet.contains(child)) {
+                Tile childTile = (Tile) child.getData();
+                String data = childTile.getType();
+
+                if (data.equals("##")) {
+                    exploredSet.add(child);
                     continue;
                 }
 
@@ -126,13 +74,13 @@ public class AstarSearch implements SearchStrategy {
                 if (!frontier.contains(child)) {
                     frontier.offer(child);
                 }
+
                 else if (tempGScore >= child.g) {
                     continue;// skip because we are at the worse path
                 }
 
                 child.parent = parent;
                 child.g = tempGScore;
-                child.h = heuristic(child, dist);
             }
         }
         return null;
@@ -154,16 +102,12 @@ public class AstarSearch implements SearchStrategy {
         List<Edge> answer = new ArrayList<Edge>();
         Node node = endNode;
 
-        int numSteps = 0;
-
         while (node.parent != null) {
 
             answer.add(new Edge(node.parent, node,
                     graph.distance(node.parent, node)));
 
             node = node.parent;
-            node.h = numSteps;
-            numSteps++;
         }
         return Lists.reverse(answer);
     }

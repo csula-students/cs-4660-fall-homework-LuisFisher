@@ -22,6 +22,7 @@ public class BFS implements SearchStrategy {
 
         for(Node n: nodeCollection) {
             n.g = Integer.MAX_VALUE;
+            n.h = 0;
             n.parent = null;
         }
 

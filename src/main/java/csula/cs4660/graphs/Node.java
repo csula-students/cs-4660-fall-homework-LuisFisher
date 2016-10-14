@@ -13,7 +13,7 @@ public class Node<T> {
 
     // used for search and compare
     public double g = Integer.MAX_VALUE;
-    public double h = 0;
+    public double h = Integer.MAX_VALUE;
     public Node parent = null;
 
     public Node(T data) {

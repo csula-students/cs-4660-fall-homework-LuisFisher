@@ -10,10 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * A quick parser class to read different format of files
@@ -36,12 +33,12 @@ public class Parser {
             Edge edge1;
             Edge edge2;
 
-            int y = 0;
+            int y = -1;
             int x = 0;
 
             curLine = reader.readLine();
 
-            x = (curLine.length() + 2) / 2;
+            x = (curLine.length() - 2) / 2;
 
             ArrayList<Node> allNodes = new ArrayList<Node>();
 
@@ -58,12 +55,9 @@ public class Parser {
                         case '+':
                         case '|':
                             index--;
-                            char1 = '#';
-                            char2 = '#';
-                            break;
+                            continue;
                         case '-':
-                            char1 = '#';
-                            break;
+                            continue;
                         default: char1 = curLine.charAt(index);
                     }
 
@@ -71,18 +65,15 @@ public class Parser {
 
                         case '+':
                         case '|':
-                            char1 = '#';
-                            char2 = '#';
-                            break;
+                            continue;
                         case '-':
-                            char2 = '#';
-                            break;
+                            continue;
                         default: char2 = curLine.charAt(index + 1);
                     }
 
                     String value = char1 + "" + char2;
 
-                    tile = new Tile(i,y,value);
+                    tile = new Tile(i - 1,y,value);
                     node = new Node(tile);
 
                     allNodes.add(node);
@@ -92,50 +83,30 @@ public class Parser {
                 curLine = reader.readLine();
             }
 
+            y--;
+
             graph.addAllNode(allNodes);
 
-            System.out.println("width: "+ x + ", height: " + y + ", expected nodes: " + x * y);
-            System.out.println("actual nodes : " + graph.getNodes().size());
-
-            System.out.println();
-
-            for(int j = 0; j < y; j++) {
-                for(int i = 0; i < x; i++) {
-                    Node n = graph.getNode(i + j*x).get();
-                    Tile t = (Tile) n.getData();
-                    System.out.print(t.getType());
-                }
-                System.out.println();
-                }
-
-            // adds edges to grid
             for(int j = 0; j < y; j++) {
                 for(int i = 0; i < x; i++) {
 
-                    // should be x*j
-                    // adds horizontal edges
-                    if (i > 0) {
-                        Node l = graph.getNode(i - 1 + j*x).get();
-                        Node r = graph.getNode(i + j*y).get();
+                    Node current = graph.getNode(i + j*x).get();
 
-                        Edge e1 = new Edge(l,r, 1);
-                        Edge e2 = new Edge(r,l, 1);
-
-                        graph.addEdge(e1);
-                        graph.addEdge(e2);
-                    }
-
-                    // adds vertical edges
                     if (j > 0) {
-
-                        Node t = graph.getNode(i + j*x - x).get();
-                        Node b = graph.getNode(i + j*x).get();
-
-                        Edge e1 = new Edge(t,b, 1);
-                        Edge e2 = new Edge(b,t, 1);
-
-                        graph.addEdge(e1);
-                        graph.addEdge(e2);
+                        Node north = graph.getNode(i + j*x - x).get();
+                        graph.addEdge(new Edge(current,north, 1));
+                    }
+                    if (i < x - 1) {
+                        Node east = graph.getNode(i + 1 + j*x).get();
+                        graph.addEdge(new Edge(current,east, 1));
+                    }
+                    if (i > 0) {
+                        Node west = graph.getNode(i - 1 + j*x).get();
+                        graph.addEdge(new Edge(current,west, 1));
+                    }
+                    if (j < y - 1) {
+                        Node south = graph.getNode(i + j*x + x).get();
+                        graph.addEdge(new Edge(current,south, 1));
                     }
                 }
             }
@@ -151,21 +122,26 @@ public class Parser {
 
         String path = "";
 
-        for (Edge e: edges ) {
+        Iterator<Edge> edgeIter = edges.iterator();
+        Edge current = null;
 
-            Tile from = (Tile)e.getFrom().getData();
-            Tile to = (Tile)e.getTo().getData();
+        while  (edgeIter.hasNext()) {
 
-            int dx = from.getX() - to.getX();
-            int dy = from.getY() - to.getY();
+            current = edgeIter.next();
+
+            Tile from = (Tile)current.getFrom().getData();
+            Tile to = (Tile)current.getTo().getData();
+
+            double dx = from.getX() - to.getX();
+            double dy = from.getY() - to.getY();
 
             //NEWS
             if (dy == 1) path += 'N';
             else if (dx == -1) path += 'E';
             else if (dx == 1) path += 'W';
             else path+= 'S';
-
-        }
+            }
+        System.out.println(path);
         return path;
     }
 }
