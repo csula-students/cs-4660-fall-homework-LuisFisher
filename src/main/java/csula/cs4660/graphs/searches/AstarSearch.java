@@ -71,16 +71,15 @@ public class AstarSearch implements SearchStrategy {
 
                 tempGScore = parent.g + graph.distance(parent, child);
 
-                if (!frontier.contains(child)) {
+                if (tempGScore >= child.g) {
+                    continue;// skip because we are at the worse path
+                }
+                else if (!frontier.contains(child)) {
+                    child.parent = parent;
+                    child.g = tempGScore;
                     frontier.offer(child);
                 }
 
-                else if (tempGScore >= child.g) {
-                    continue;// skip because we are at the worse path
-                }
-
-                child.parent = parent;
-                child.g = tempGScore;
             }
         }
         return null;
