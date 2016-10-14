@@ -30,18 +30,12 @@ public class Parser {
             Tile tile;
             Node node;
 
-            Edge edge1;
-            Edge edge2;
-
-            int y = -1;
-            int x = 0;
+            ArrayList<Node> allNodes = new ArrayList<Node>();
 
             curLine = reader.readLine();
 
-            x = (curLine.length() - 2) / 2;
-
-            ArrayList<Node> allNodes = new ArrayList<Node>();
-
+            int x = (curLine.length() - 2) / 2;
+            int y = -1;
 
             while (curLine != null) {
 
@@ -58,18 +52,10 @@ public class Parser {
                             continue;
                         case '-':
                             continue;
-                        default: char1 = curLine.charAt(index);
                     }
 
-                    switch (curLine.charAt(index + 1)) {
-
-                        case '+':
-                        case '|':
-                            continue;
-                        case '-':
-                            continue;
-                        default: char2 = curLine.charAt(index + 1);
-                    }
+                    char1 = curLine.charAt(index);
+                    char2 = curLine.charAt(index + 1);
 
                     String value = char1 + "" + char2;
 
@@ -85,8 +71,10 @@ public class Parser {
 
             y--;
 
+            // adds all nodes at once, used to make matrix creation faster
             graph.addAllNode(allNodes);
 
+            // adds edges to others in order NEWS
             for(int j = 0; j < y; j++) {
                 for(int i = 0; i < x; i++) {
 
@@ -114,7 +102,6 @@ public class Parser {
         catch (IOException e) {
             e.printStackTrace();
         }
-
         return graph;
     }
 
@@ -123,25 +110,25 @@ public class Parser {
         String path = "";
 
         Iterator<Edge> edgeIter = edges.iterator();
-        Edge current = null;
+
+        Edge e = null;
 
         while  (edgeIter.hasNext()) {
 
-            current = edgeIter.next();
+            e = edgeIter.next();
 
-            Tile from = (Tile)current.getFrom().getData();
-            Tile to = (Tile)current.getTo().getData();
+            Tile from = (Tile)e.getFrom().getData();
+            Tile to = (Tile)e.getTo().getData();
 
             double dx = from.getX() - to.getX();
             double dy = from.getY() - to.getY();
 
-            //NEWS
             if (dy == 1) path += 'N';
             else if (dx == -1) path += 'E';
             else if (dx == 1) path += 'W';
-            else path+= 'S';
+            else if (dy == -1 )path+= 'S';
             }
-        System.out.println(path);
+
         return path;
     }
 }

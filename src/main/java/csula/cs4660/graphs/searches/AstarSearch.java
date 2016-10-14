@@ -15,7 +15,7 @@ import java.util.*;
 public class AstarSearch implements SearchStrategy {
 
     // D is a scale value for you to adjust performance vs accuracy
-    private final double D = 1.0;
+    private final double D = 1.5;
 
     @Override
     public List<Edge> search(Graph graph, Node source, Node dist) {
@@ -27,20 +27,21 @@ public class AstarSearch implements SearchStrategy {
 
         Collection<Node> nodeCollection = graph.getNodes();
 
-        // initialize g,h,parent
+        // initialize g, h, parent for all nodes
         for(Node node: nodeCollection) {
 
             node.parent = null;
             node.g = Double.MAX_VALUE;
             node.h = heuristic(node, dist);
 
-            // set source g and h values
+            // set source g value
             if (node.equals(source)) {
                 srcNode = node;
                 node.g = 0;
             }
         }
 
+        // add source to frontier
         frontier.offer(srcNode);
 
         Node parent = null;
@@ -48,15 +49,18 @@ public class AstarSearch implements SearchStrategy {
 
         while(!frontier.isEmpty()) {
 
+            // remove node from frontier and add to explored set
             parent = frontier.poll();
             exploredSet.add(parent);
 
+            // return path found
             if (parent.equals(dist)) {
                 return constructPath(graph, parent);
             }
 
             for(Node child: graph.neighbors(parent)) {
 
+                // skips previously explored paths
                 if (exploredSet.contains(child)) {
                     continue;
                 }
@@ -64,6 +68,7 @@ public class AstarSearch implements SearchStrategy {
                 Tile childTile = (Tile) child.getData();
                 String data = childTile.getType();
 
+                // if current child is a wall adds to explored set
                 if (data.equals("##")) {
                     exploredSet.add(child);
                     continue;
@@ -79,12 +84,12 @@ public class AstarSearch implements SearchStrategy {
                     child.g = tempGScore;
                     frontier.offer(child);
                 }
-
             }
         }
         return null;
     }
 
+    // uses manhatten distance
     private double heuristic(Node source, Node goal) {
 
         Tile sourceT = (Tile) source.getData();
