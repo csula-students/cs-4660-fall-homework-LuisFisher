@@ -12,8 +12,8 @@ public class Node<T> {
     private final T data;
 
     // used for search and compare
-    public double g = Integer.MAX_VALUE;
-    public double h = Integer.MAX_VALUE;
+    public double g = Double.POSITIVE_INFINITY;
+    public double h = 0;
     public Node parent = null;
 
     public Node(T data) {

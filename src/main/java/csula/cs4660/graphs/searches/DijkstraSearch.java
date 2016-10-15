@@ -28,7 +28,7 @@ public class DijkstraSearch implements SearchStrategy {
         for(Node node: nodeCollection) {
 
             node.parent = null;
-            node.g = Integer.MAX_VALUE;
+            node.g = Double.POSITIVE_INFINITY;
             node.h = 0;
 
             if (node.equals(source)) {
@@ -53,7 +53,7 @@ public class DijkstraSearch implements SearchStrategy {
                     nodes.offer(child);
                 }
 
-                if (child.g == Integer.MAX_VALUE) {
+                if (child.g == Double.POSITIVE_INFINITY) {
                     child.g = graph.distance(parent, child);
                     child.parent = parent;
                 }

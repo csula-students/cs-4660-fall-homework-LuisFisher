@@ -31,7 +31,7 @@ public class AstarSearch implements SearchStrategy {
         for(Node node: nodeCollection) {
 
             node.parent = null;
-            node.g = Double.MAX_VALUE;
+            node.g = Double.POSITIVE_INFINITY;
             node.h = heuristic(node, dist);
 
             // set source g value
