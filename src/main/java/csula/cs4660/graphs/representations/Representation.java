@@ -4,8 +4,10 @@ import csula.cs4660.graphs.Edge;
 import csula.cs4660.graphs.Node;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
 
 /**
  * Interface to define common behaviors across different representations
@@ -54,6 +56,8 @@ public interface Representation {
 
     boolean addNode(Node x);
 
+    boolean addAllNode(List<Node> x);
+
     boolean removeNode(Node x);
 
     boolean addEdge(Edge x);
@@ -61,6 +65,8 @@ public interface Representation {
     boolean removeEdge(Edge x);
 
     int distance(Node from, Node to);
+
+    Collection<Node> getNodes();
 
     Optional<Node> getNode(int index);
 
