@@ -133,7 +133,7 @@ public class Solution {
         enum STATE {
             EMPTY("-"),
             START("m"),
-            END("p");
+           END("p");
 
             private String character;
 
