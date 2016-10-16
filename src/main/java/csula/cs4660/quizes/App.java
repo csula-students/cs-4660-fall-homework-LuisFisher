@@ -6,7 +6,6 @@ import csula.cs4660.graphs.Node;
 import csula.cs4660.graphs.representations.Representation;
 import csula.cs4660.graphs.searches.BFS;
 import csula.cs4660.graphs.searches.DijkstraSearch;
-import csula.cs4660.graphs.searches.SearchStrategy;
 import csula.cs4660.quizes.models.State;
 
 import java.util.*;
@@ -21,8 +20,8 @@ public class App {
         State goalState = Client.getState("e577aa79473673f6158cc73e0e5dc122").get();
 
         Graph graph = new Graph(Representation.of(Representation.STRATEGY.ADJACENCY_LIST));
-
         buildGraph(graph, initialState);
+
         Node start = new Node(initialState);
         Node end = new Node(goalState);
 
@@ -34,6 +33,7 @@ public class App {
 
 
         path = graph.search(new DijkstraSearch(), start, end);
+
         System.out.println("DijkstraSearch Path: ");
         showRooms(path);
         System.out.println();
@@ -98,21 +98,15 @@ public class App {
         int cost = 0;
 
         for(int index = 0; index < path.size(); index++) {
+
             State fromState = (State)path.get(index).getFrom().getData();
+            State toState = (State)path.get(index).getTo().getData();
 
             cost = path.get(index).getValue() - 100;
             cost *= -1;
 
-            System.out.println("room: " + fromState.getLocation().getName() +
-                    ", cost: " + cost);
+            System.out.println(fromState.getLocation().getName() + " : " +
+                    toState.getLocation().getName() + " : " + cost);
         }
-
-        cost = path.get(path.size() - 1).getValue() - 100;
-        cost *= -1;
-
-        State toState = (State)path.get(path.size() - 1).getTo().getData();
-        System.out.println("room: " + toState.getLocation().getName() +
-                ", cost: " + cost);
     }
-
 }
