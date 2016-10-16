@@ -16,11 +16,8 @@ import java.util.*;
  */
 public class App {
     public static void main(String[] args) {
-        // to get a state, you can simply call `Client.getState with the id`
 
         State initialState = Client.getState("10a5461773e8fd60940a56d2e9ef7bf4").get();
-        //State goalState = Client.getState("0c32523e344445c79fad7e3c59eb75b0").get();
-        //State goalState = Client.getState("4460f14d117de3e4c086421c0816e27c").get();
         State goalState = Client.getState("e577aa79473673f6158cc73e0e5dc122").get();
 
         Graph graph = new Graph(Representation.of(Representation.STRATEGY.ADJACENCY_LIST));
@@ -39,12 +36,8 @@ public class App {
         path = graph.search(new DijkstraSearch(), start, end);
         System.out.println("DijkstraSearch Path: ");
         showRooms(path);
-
-
-
+        System.out.println();
     }
-
-
 
     public static void buildGraph(Graph graph, State current) {
 
