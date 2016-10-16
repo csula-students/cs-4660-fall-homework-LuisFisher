@@ -15,13 +15,12 @@ public class BFS implements SearchStrategy {
     @Override
     public List<Edge> search(Graph graph, Node source, Node dist) {
 
-        List<Edge> answer = new ArrayList<Edge>();
         Collection<Node> nodeCollection = graph.getNodes();
 
         Queue<Node> nodes = new LinkedList<Node>();
 
         for(Node n: nodeCollection) {
-            n.g = Integer.MAX_VALUE;
+            n.g = Double.POSITIVE_INFINITY;
             n.h = 0;
             n.parent = null;
         }
@@ -51,7 +50,7 @@ public class BFS implements SearchStrategy {
 
                 nodes.offer(child);
 
-                if (child.g == Integer.MAX_VALUE) {
+                if (child.g == Double.POSITIVE_INFINITY) {
                     child.g = graph.distance(parent, child);
                     child.parent = parent;
                 }
@@ -64,7 +63,6 @@ public class BFS implements SearchStrategy {
 
         return constructPath(graph, endNode);
     }
-
 
     private List<Edge> constructPath(Graph graph, Node endNode) {
 
@@ -81,5 +79,3 @@ public class BFS implements SearchStrategy {
         return Lists.reverse(answer);
     }
 }
-
-
