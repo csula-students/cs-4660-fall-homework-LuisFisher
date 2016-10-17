@@ -6,6 +6,7 @@ import csula.cs4660.graphs.Node;
 import csula.cs4660.graphs.representations.Representation;
 import csula.cs4660.graphs.searches.BFS;
 import csula.cs4660.graphs.searches.DijkstraSearch;
+import csula.cs4660.quizes.models.DTO;
 import csula.cs4660.quizes.models.State;
 
 import java.util.*;
@@ -20,10 +21,10 @@ public class App {
         State goalState = Client.getState("e577aa79473673f6158cc73e0e5dc122").get();
 
         Graph graph = new Graph(Representation.of(Representation.STRATEGY.ADJACENCY_LIST));
-        buildGraph(graph, initialState);
+        buildGraph(graph, initialState.getId());
 
-        Node start = new Node(initialState);
-        Node end = new Node(goalState);
+        Node start = new Node(initialState.getId());
+        Node end = new Node(goalState.getId());
 
         List<Edge> path = graph.search(new BFS(), start, end);
 
@@ -39,46 +40,51 @@ public class App {
         System.out.println();
     }
 
-    public static void buildGraph(Graph graph, State current) {
+    public static void buildGraph(Graph graph, String current) {
 
-        Queue<Node> nodes = new LinkedList<Node>();
+        Queue<String> frontier = new LinkedList<String>();
         Set<String> exploredSet = new HashSet<String>();
 
-        Node parent = new Node(current);
-        graph.addNode(parent);
+        String parentId = current;
 
-        nodes.offer(parent);
+        graph.addNode(new Node(parentId));
+
+        frontier.offer(parentId);
 
         int nodeCount  = 0;
 
-        while (!nodes.isEmpty()) {
+        while (!frontier.isEmpty()) {
 
-            parent = nodes.poll();
-            State parentState = (State)parent.getData();
+            parentId = frontier.poll();
 
-            if (exploredSet.contains(parentState.getId())) {
+            if (exploredSet.contains(parentId)) {
                 continue;
             }
 
-            exploredSet.add(parentState.getId());
+            exploredSet.add(parentId);
             nodeCount++;
+
+            State parentState = Client.getState(parentId).get();
 
             for (State childState: parentState.getNeighbors()) {
 
-                if (exploredSet.contains(childState.getId())) {
+                String childId = childState.getId();
+
+                if (exploredSet.contains(childId)) {
                     continue;
                 }
 
-                State data = Client.getState(childState.getId()).get();
-                Node child = new Node(data);
+                frontier.add(childId);
 
-                graph.addNode(child);
-                nodes.add(child);
+                Node child = new Node(childId);
+                Node parent = new Node(parentId);
 
-                int cost = -1 * Client.stateTransition(current.getId(),
-                        childState.getId()).get().getEvent().getEffect();
+                if (!graph.getNodes().contains(child)) {
+                    graph.addNode(child);
+                }
 
-                cost += 100;
+                int cost = Client.stateTransition(parentId,
+                        childId).get().getEvent().getEffect();
 
                 Edge edge = new Edge(parent, child, cost);
 
@@ -88,7 +94,6 @@ public class App {
             if (nodeCount % 50 == 0) {
                 System.out.println(nodeCount);
             }
-
         }
         System.out.println(nodeCount);
     }
@@ -99,14 +104,18 @@ public class App {
 
         for(int index = 0; index < path.size(); index++) {
 
-            State fromState = (State)path.get(index).getFrom().getData();
-            State toState = (State)path.get(index).getTo().getData();
+            String fromId = (String)path.get(index).getFrom().getData();
+            String toId = (String)path.get(index).getTo().getData();
 
-            cost = path.get(index).getValue() - 100;
-            cost *= -1;
+            State fromState = Client.getState(fromId).get();
+            State toState = Client.getState(toId).get();
+
+            DTO dto = Client.stateTransition(fromId, toId).get();
+
+            cost = path.get(index).getValue();
 
             System.out.println(fromState.getLocation().getName() + " : " +
-                    toState.getLocation().getName() + " : " + cost);
+                    toState.getLocation().getName() + " : " + cost + " : " + dto.getEvent().getDescription());
         }
     }
 }

@@ -14,10 +14,50 @@ import java.util.*;
 public class DijkstraSearch implements SearchStrategy {
 
 
+    /*
+    function Dijkstra(Graph, source) {
+    // Initialization
+    var dist = {};
+    var prev = {};
+    dist[source] ← 0
+
+    // create priority vertex queue Q
+
+    for (each vertex v in Graph) {
+        if (v ≠ source) {
+            // Unknown distance from source to v
+            dist[v] ← INFINITY
+            // Predecessor(parent) of v
+            prev[v] ← UNDEFINED
+        }
+
+        Q.add_with_priority(v, dist[v])
+    }
+
+    while (Q is not empty) {
+        // Remove and return best vertex
+        u ← Q.extract_min()
+        // only v that is still in Q
+        for (each neighbor v of u) {
+            alt = dist[u] + length(u, v)
+            if (alt < dist[v]) {
+                dist[v] ← alt
+                prev[v] ← u
+                Q.decrease_priority(v, alt)
+            }
+        }
+    }
+
+    // may want to consider return right away when find out
+    // dest node
+
+    return dist[], prev[]
+}
+     */
+
+
     @Override
     public List<Edge> search(Graph graph, Node source, Node dist) {
-
-        List<Edge> answer = new ArrayList<Edge>();
 
         Collection<Node> nodeCollection = graph.getNodes();
 
@@ -29,7 +69,7 @@ public class DijkstraSearch implements SearchStrategy {
 
             node.parent = null;
             node.g = Double.POSITIVE_INFINITY;
-            node.h = 0;
+            node.h = 1;
 
             if (node.equals(source)) {
                 node.g = 0;
@@ -60,7 +100,7 @@ public class DijkstraSearch implements SearchStrategy {
 
                 alt = parent.g + graph.distance(parent, child);
 
-                if (alt < child.g) {
+                if (alt > child.g) {
                     child.g = alt;
                     child.parent = parent;
                 }

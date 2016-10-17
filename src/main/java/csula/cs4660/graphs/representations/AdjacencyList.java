@@ -179,15 +179,20 @@ public class AdjacencyList implements Representation {
     @Override
     public boolean addEdge(Edge x) {
 
-        if (!adjacencyList.containsKey(x.getFrom()) ||
-                !adjacencyList.containsKey(x.getTo())) return false;
+        Node from = x.getFrom();
+        Node to = x.getTo();
 
-        for(Edge e: adjacencyList.get(x.getFrom())) {
+        if (!(adjacencyList.containsKey(from) && adjacencyList.containsKey(to))) {
+            return false;
+        }
+
+        ArrayList<Edge> edges = (ArrayList<Edge>)adjacencyList.get(from);
+
+        for(Edge e: edges) {
             if (e.equals(x)) return false;
         }
 
         adjacencyList.get(x.getFrom()).add(x);
-
         return true;
     }
 
