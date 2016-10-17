@@ -9,13 +9,24 @@ import java.util.Comparator;
  */
 public class NodeComparator implements Comparator<Node> {
 
+    boolean reverse;
+
+    public  NodeComparator() {
+        reverse = false;
+
+    }
+
+    public NodeComparator(boolean reverse) {
+        this.reverse = reverse;
+    }
+
     @Override
     public int compare(Node o1, Node o2){
 
         double f1 = o1.g + o1.h;
         double f2 = o2.g + o2.h;
 
-        if (o1.h == 0) return (int)(f2 -f1);
-        else return (int)(f1 -f2);
+        if (reverse) return (int)(f1 - f2);
+        return (int)(f2 - f1);
     }
 }

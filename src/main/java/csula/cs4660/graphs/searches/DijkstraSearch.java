@@ -13,63 +13,21 @@ import java.util.*;
  */
 public class DijkstraSearch implements SearchStrategy {
 
-
-    /*
-    function Dijkstra(Graph, source) {
-    // Initialization
-    var dist = {};
-    var prev = {};
-    dist[source] ← 0
-
-    // create priority vertex queue Q
-
-    for (each vertex v in Graph) {
-        if (v ≠ source) {
-            // Unknown distance from source to v
-            dist[v] ← INFINITY
-            // Predecessor(parent) of v
-            prev[v] ← UNDEFINED
-        }
-
-        Q.add_with_priority(v, dist[v])
-    }
-
-    while (Q is not empty) {
-        // Remove and return best vertex
-        u ← Q.extract_min()
-        // only v that is still in Q
-        for (each neighbor v of u) {
-            alt = dist[u] + length(u, v)
-            if (alt < dist[v]) {
-                dist[v] ← alt
-                prev[v] ← u
-                Q.decrease_priority(v, alt)
-            }
-        }
-    }
-
-    // may want to consider return right away when find out
-    // dest node
-
-    return dist[], prev[]
-}
-     */
-
-
     @Override
     public List<Edge> search(Graph graph, Node source, Node dist) {
 
         Collection<Node> nodeCollection = graph.getNodes();
 
-        Queue<Node> nodes = new PriorityQueue<>(new NodeComparator());
+        Queue<Node> frontier = new PriorityQueue<>(new NodeComparator(true));
+        Set<Node> exploredSet = new HashSet<Node>();
 
         Node srcNode = null;
 
         for(Node node: nodeCollection) {
 
             node.parent = null;
-            node.g = Double.POSITIVE_INFINITY;
-            node.h = 1;
+            node.g = Double.NEGATIVE_INFINITY;
+            node.h = 0;
 
             if (node.equals(source)) {
                 node.g = 0;
@@ -77,35 +35,43 @@ public class DijkstraSearch implements SearchStrategy {
             }
         }
 
-        nodes.offer(srcNode);
+        frontier.offer(srcNode);
 
         double alt = 0;
         Node parent = null;
         Node endNode = null;
 
-        while(!nodes.isEmpty()) {
+        while(!frontier.isEmpty()) {
 
-            parent = nodes.poll();
+            parent = frontier.poll();
+
+            if (exploredSet.contains(parent)) {
+                continue;
+            }
+
+            exploredSet.add(parent);
 
             for(Node child: graph.neighbors(parent)) {
 
-                if (!nodes.contains(child)) {
-                    nodes.offer(child);
+                if (!frontier.contains(child)) {
+                    frontier.offer(child);
                 }
 
-                if (child.g == Double.POSITIVE_INFINITY) {
-                    child.g = graph.distance(parent, child);
+                if (child.g == Double.NEGATIVE_INFINITY) {
+                    child.g = parent.g + graph.distance(parent, child);
                     child.parent = parent;
                 }
+                else {
 
-                alt = parent.g + graph.distance(parent, child);
+                    alt = parent.g + child.g;
 
-                if (alt > child.g) {
-                    child.g = alt;
-                    child.parent = parent;
+                    if (alt >= child.g) {
+                        child.g = alt;
+                        child.parent = parent;
+                    }
                 }
 
-                if (child.equals(dist)) {
+                if (child.equals(dist) && endNode == null) {
                     endNode = child;
                 }
             }

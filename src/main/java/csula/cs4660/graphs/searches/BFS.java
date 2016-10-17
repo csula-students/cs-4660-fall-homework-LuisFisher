@@ -17,38 +17,29 @@ public class BFS implements SearchStrategy {
 
         Collection<Node> nodeCollection = graph.getNodes();
 
-        Queue<Node> nodes = new LinkedList<Node>();
+        Queue<Node> frontier = new LinkedList<Node>();
 
         for(Node n: nodeCollection) {
             n.g = Double.POSITIVE_INFINITY;
             n.h = 0;
             n.parent = null;
-        }
 
-        if (nodeCollection.contains(source)) {
-
-            for(Node node: nodeCollection) {
-
-                if (node.equals(source)) {
-
-                    node.g = 0;
-                    node.parent = null;
-                    nodes.offer(source);
-                    break;
-                }
+            if (n.equals(source)) {
+                n.g = 0;
+                frontier.offer(n);
             }
         }
 
         Node parent = null;
         Node endNode = null;
 
-        while(!nodes.isEmpty()) {
+        while(!frontier.isEmpty()) {
 
-            parent = nodes.poll();
+            parent = frontier.poll();
 
             for(Node child: graph.neighbors(parent)) {
 
-                nodes.offer(child);
+                frontier.offer(child);
 
                 if (child.g == Double.POSITIVE_INFINITY) {
                     child.g = graph.distance(parent, child);
@@ -56,12 +47,12 @@ public class BFS implements SearchStrategy {
                 }
 
                 if (child.equals(dist)) {
-                    endNode = child;
+                    return constructPath(graph, child);
                 }
             }
         }
 
-        return constructPath(graph, endNode);
+        return null;
     }
 
     private List<Edge> constructPath(Graph graph, Node endNode) {

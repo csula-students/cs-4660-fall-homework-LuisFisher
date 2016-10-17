@@ -20,7 +20,7 @@ public class AstarSearch implements SearchStrategy {
     @Override
     public List<Edge> search(Graph graph, Node source, Node dist) {
 
-        Queue<Node> frontier = new PriorityQueue<>(new NodeComparator());
+        Queue<Node> frontier = new PriorityQueue<>(new NodeComparator(true));
         Set<Node> exploredSet = new HashSet<Node>();
 
         Node srcNode = null;
