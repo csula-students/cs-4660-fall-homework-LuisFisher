@@ -3,6 +3,7 @@ package csula.cs4660.graphs;
 import csula.cs4660.graphs.representations.Representation;
 import csula.cs4660.graphs.searches.SearchStrategy;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,6 +83,10 @@ public class Graph {
         return strategy.getNode(index);
     }
 
+    public Collection<Node> getNodes() {
+        return strategy.getNodes();
+    }
+
     /**
      * Search through this graph from sourceNode to distNode and return a list
      * of edges in between
@@ -89,6 +94,11 @@ public class Graph {
     public List<Edge> search(SearchStrategy strategy, Node source, Node dist) {
         return strategy.search(this, source, dist);
     }
+
+    public boolean addAllNode(List<Node> x) {
+        return strategy.addAllNode(x);
+    }
+
 
     @Override
     public String toString() {

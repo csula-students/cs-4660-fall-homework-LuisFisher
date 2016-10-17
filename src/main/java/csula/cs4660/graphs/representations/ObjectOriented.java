@@ -17,11 +17,16 @@ import java.util.*;
  */
 
 public class ObjectOriented implements Representation {
+
     private Collection<Node> nodes;
     private Collection<Edge> edges;
 
+    private ArrayList<Node> indexedNodes;
+
+
     public ObjectOriented(File file) {
 
+        indexedNodes = new ArrayList<Node>();
         nodes = new ArrayList<Node>();
         edges = new ArrayList<Edge>();
         readFile(file);
@@ -29,6 +34,7 @@ public class ObjectOriented implements Representation {
 
     public ObjectOriented() {
 
+        indexedNodes = new ArrayList<Node>();
         nodes = new ArrayList<Node>();
         edges = new ArrayList<Edge>();
     }
@@ -54,6 +60,8 @@ public class ObjectOriented implements Representation {
                 tempNode = new Node(index);
 
                 nodesTemp.add(tempNode);
+
+                indexedNodes.add(tempNode);
             }
 
             while ((curLine = reader.readLine()) != null) {
@@ -112,7 +120,24 @@ public class ObjectOriented implements Representation {
         if (nodes.contains(x)) return false;
 
         nodes.add(x);
+        indexedNodes.add(x);
         return true;
+    }
+
+    @Override
+    public boolean addAllNode(List<Node> x) {
+
+        boolean added = false;
+
+        for (Node n: x) {
+            if (!nodes.contains(n))  {
+                nodes.add(n);
+                indexedNodes.add(n);
+                added = true;
+            }
+        }
+
+        return added;
     }
 
     @Override
@@ -121,6 +146,7 @@ public class ObjectOriented implements Representation {
         if (!nodes.contains(x)) return false;
 
         nodes.remove(x);
+        indexedNodes.remove(x);
 
         ArrayList<Edge> edgesToRemove = new ArrayList<Edge>();
 
@@ -167,7 +193,12 @@ public class ObjectOriented implements Representation {
     }
 
     @Override
+    public Collection<Node> getNodes() {
+        return nodes;
+    }
+
+    @Override
     public Optional<Node> getNode(int index) {
-        return null;
+        return Optional.of(indexedNodes.get(index));
     }
 }
