@@ -20,7 +20,6 @@ public class MiniMaxState {
     }
 
     public void setValue(int value) { this.value = value; }
-    public void setIndex(int value) { this.value = value; }
 
     @Override
     public boolean equals(Object o) {
