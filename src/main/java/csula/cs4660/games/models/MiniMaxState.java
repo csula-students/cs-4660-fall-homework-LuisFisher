@@ -5,7 +5,7 @@ package csula.cs4660.games.models;
  */
 public class MiniMaxState {
     private final int index;
-    private final int value;
+    private int value;
 
     public MiniMaxState(int index, int value) {
         this.index = index;
@@ -15,10 +15,12 @@ public class MiniMaxState {
     public int getIndex() {
         return index;
     }
-
     public int getValue() {
         return value;
     }
+
+    public void setValue(int value) { this.value = value; }
+    public void setIndex(int value) { this.value = value; }
 
     @Override
     public boolean equals(Object o) {

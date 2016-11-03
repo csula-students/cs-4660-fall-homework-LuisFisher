@@ -60,10 +60,16 @@ public class MiniMaxTest {
 
     @Test
     public void testGetBestMove() {
-        assertEquals(
-            new Node<>(new MiniMaxState(1, 8)),
-            MiniMax.getBestMove(graph, new Node<>(new MiniMaxState(0, 0)), 3, true)
-        );
+
+        Node n = MiniMax.getBestMove(graph, new Node<>(new MiniMaxState(0, 0)), 3, true);
+
+        MiniMaxState nd = (MiniMaxState)n.getData();
+
+        System.out.println(nd.getValue());
+        System.out.println(nd.getIndex());
+
+        assertEquals(new Node<>(new MiniMaxState(1, 8)), n);
+
 
         // test after minimax mutate effect
         assertEquals(
