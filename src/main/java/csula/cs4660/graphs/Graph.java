@@ -83,8 +83,18 @@ public class Graph {
         return strategy.getNode(index);
     }
 
+    /**
+     * A simple method to get all nodes out of graph
+     */
     public Collection<Node> getNodes() {
         return strategy.getNodes();
+    }
+
+    /**
+     * A simple method to a node that is equal to current node inside a graph
+     */
+    public Optional<Node> getNode(Node node) {
+        return strategy.getNode(node);
     }
 
     /**
@@ -95,11 +105,16 @@ public class Graph {
         return strategy.search(this, source, dist);
     }
 
-    public boolean addAllNode(List<Node> x) {
-        return strategy.addAllNode(x);
+    /**
+     * A simple method to add all nodes that are not in the list to a graph
+     */
+    public boolean addAllNode(List<Node> nodes) {
+        return strategy.addAllNode(nodes);
     }
 
-
+    /**
+     * A simple method to string method
+     */
     @Override
     public String toString() {
         return strategy.toString();

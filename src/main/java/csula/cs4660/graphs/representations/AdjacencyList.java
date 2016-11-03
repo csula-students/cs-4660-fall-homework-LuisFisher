@@ -1,9 +1,5 @@
 package csula.cs4660.graphs.representations;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multiset;
 import csula.cs4660.graphs.Edge;
 import csula.cs4660.graphs.Node;
 
@@ -11,8 +7,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.*;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Iterator;
+
 
 /**
  * Adjacency list is probably the most common implementation to store the unknown
@@ -228,5 +231,18 @@ public class AdjacencyList implements Representation {
         Node n = indexedNodes.get(index);
 
         return Optional.of(n);
+    }
+
+    @Override
+    public Optional<Node> getNode(Node node) {
+        Iterator<Node> iterator = adjacencyList.keySet().iterator();
+        Optional<Node> result = Optional.empty();
+        while (iterator.hasNext()) {
+            Node next = iterator.next();
+            if (next.equals(node)) {
+                result = Optional.of(next);
+            }
+        }
+        return result;
     }
 }
