@@ -10,6 +10,9 @@ public class MiniMax {
     
     public static Node getBestMove(Graph graph, Node root, Integer depth, Boolean maximizingPlayer) {
 
+        // TODO: implement minimax to retrieve best move
+        // NOTE: you should mutate graph and node as you traverse and update value
+
         miniMax(graph, root, depth, maximizingPlayer);
 
         int rootValue = ((MiniMaxState)root.getData()).getValue();
@@ -27,9 +30,6 @@ public class MiniMax {
     }
 
     private static Node miniMax(Graph graph, Node root, Integer depth, Boolean maximizingPlayer) {
-
-        // TODO: implement minimax to retrieve best move
-        // NOTE: you should mutate graph and node as you traverse and update value
 
         List<Node> children = graph.neighbors(root);
 
