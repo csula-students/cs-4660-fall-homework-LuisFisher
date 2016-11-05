@@ -27,21 +27,18 @@ public class AlphaBeta {
         return source;
     }
 
-    private static Node alphaBeta(Graph graph, Node root, Integer depth, Integer alpha, Integer beta, Boolean maximizingPlayer) {
+    private static Node alphaBeta(Graph graph, Node source, Integer depth, Integer alpha, Integer beta, Boolean maximizingPlayer) {
 
-        List<Node> children = graph.neighbors(root);
+        List<Node> children = graph.neighbors(source);
 
         if ((depth == 0) || (children.size() == 0)) {
             // the end of game by **evaluate** function
             // return evaluate(soureNode.gameState); // return a number
             // returning root because we do not have an eval function for game
-            return root;
+            return source;
         }
 
-        MiniMaxState rootMMS = (MiniMaxState)root.getData();
-
-        int maxAlpha = alpha;
-        int maxBeta = beta;
+        MiniMaxState rootMMS = (MiniMaxState)source.getData();
 
         if (maximizingPlayer) {
 
@@ -52,15 +49,18 @@ public class AlphaBeta {
                 int value = ((MiniMaxState) alphaBeta(graph, node, depth - 1, alpha, beta, false).getData()).getValue();
 
                 bestValue = Math.max(bestValue, value);
-                maxAlpha = Math.max(maxAlpha, bestValue);
+
+                source.alpha = Math.max(node.alpha, bestValue);
                 rootMMS.setValue(bestValue);
 
-                if (beta <= maxAlpha) {
+                System.out.println(rootMMS.getIndex() + " " +  node.alpha + " " + node.beta);
+
+                if (node.beta < node.alpha) {
                     break;
                 }
             }
 
-            return root;
+            return source;
         }
         else {
 
@@ -71,15 +71,18 @@ public class AlphaBeta {
                 int value = ((MiniMaxState) alphaBeta(graph, node, depth - 1, alpha, beta, true).getData()).getValue();
 
                 bestValue = Math.min(bestValue, value);
-                maxBeta = Math.max(maxBeta, bestValue);
+                source.beta = Math.min(node.beta, bestValue);
+
                 rootMMS.setValue(bestValue);
 
-                if (beta <= maxAlpha) {
+                System.out.println(rootMMS.getIndex() + " " +  node.alpha + " " + node.beta);
+
+                if (node.beta < node.alpha) {
                     break;
                 }
             }
 
-            return root;
+            return source;
         }
     }
 }
