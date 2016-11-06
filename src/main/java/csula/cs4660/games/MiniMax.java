@@ -13,9 +13,9 @@ public class MiniMax {
         miniMax(graph, root, depth, maximizingPlayer);
 
         // prints out resulting nodes with in form of rows: index value for testing
-        for(Node n: graph.getNodes()) {
-            System.out.println(((MiniMaxState) n.getData()).getIndex() + " " +((MiniMaxState) n.getData()).getValue());
-        }
+//        for(Node n: graph.getNodes()) {
+//            System.out.println(((MiniMaxState) n.getData()).getIndex() + " " +((MiniMaxState) n.getData()).getValue());
+//        }
 
         int rootValue = ((MiniMaxState)root.getData()).getValue();
 

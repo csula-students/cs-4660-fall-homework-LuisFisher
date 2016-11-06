@@ -13,10 +13,10 @@ public class AlphaBeta {
         alphaBeta(graph, root, depth, alpha, beta, maximizingPlayer);
 
         // prints out resulting nodes with in form of rows: index value alpha beta for testing
-        for (Node n : graph.getNodes()) {
-            System.out.println(((MiniMaxState) n.getData()).getIndex() + " " + ((MiniMaxState) n.getData()).getValue() +
-                    " " + n.alpha + " " + n.beta);
-        }
+//        for (Node n : graph.getNodes()) {
+//            System.out.println(((MiniMaxState) n.getData()).getIndex() + " " + ((MiniMaxState) n.getData()).getValue() +
+//                    " " + n.alpha + " " + n.beta);
+//        }
 
         int rootValue = ((MiniMaxState)root.getData()).getValue();
 
