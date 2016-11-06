@@ -10,14 +10,9 @@ public class MiniMax {
     
     public static Node getBestMove(Graph graph, Node root, Integer depth, Boolean maximizingPlayer) {
 
-
-        // TODO: implement minimax to retrieve best move
-        // NOTE: you should mutate graph and node as you traverse and update value
-
         miniMax(graph, root, depth, maximizingPlayer);
 
-
-
+        // prints out resulting nodes with in form of rows: index value for testing
         for(Node n: graph.getNodes()) {
             System.out.println(((MiniMaxState) n.getData()).getIndex() + " " +((MiniMaxState) n.getData()).getValue());
         }
@@ -28,9 +23,9 @@ public class MiniMax {
 
             int nodeValue = ((MiniMaxState)node.getData()).getValue();
 
-            if (rootValue == nodeValue) {
+            if (rootValue == nodeValue) { // get first child that has same value
 
-                return  graph.getNode(node).get();
+                return  graph.getNode(node).get(); // get specific node in memory
             }
         }
 
@@ -39,13 +34,11 @@ public class MiniMax {
 
     private static Node miniMax(Graph graph, Node root, Integer depth, Boolean maximizingPlayer) {
 
-        root = graph.getNode(root).get();
+        root = graph.getNode(root).get(); // sets reference to correct location in memory
 
         List<Node> children = graph.neighbors(root);
 
         if ((depth == 0) || (children.size() == 0)) {
-            // the end of game by **evaluate** function
-            // return evaluate(soureNode.gameState); // return a number
             // returning root because we do not have an eval function for game
             return root;
         }
@@ -60,8 +53,8 @@ public class MiniMax {
 
                 int value = ((MiniMaxState) miniMax(graph, node, depth - 1, false).getData()).getValue();
 
-                bestValue = Math.max(bestValue, value);
-                rootMMS.setValue(bestValue);
+                bestValue = Math.max(bestValue, value); // used in both minimax
+                rootMMS.setValue(bestValue); // sets value for minimax
             }
 
             return root;
@@ -74,8 +67,8 @@ public class MiniMax {
 
                 int value = ((MiniMaxState) miniMax(graph, node, depth - 1, true).getData()).getValue();
 
-                bestValue = Math.min(bestValue, value);
-                rootMMS.setValue(bestValue);
+                bestValue = Math.min(bestValue, value); // used in both minimax
+                rootMMS.setValue(bestValue); // sets value for minimax
             }
 
             return root;
