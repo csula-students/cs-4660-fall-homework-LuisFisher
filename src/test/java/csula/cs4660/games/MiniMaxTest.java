@@ -62,6 +62,7 @@ public class MiniMaxTest {
 
     @Test
     public void testGetBestMove() {
+
         assertEquals(
             (new Node<>(new MiniMaxState(1, 8)).getData()).getValue(),
             ((MiniMaxState) MiniMax.getBestMove(graph, new Node<>(new MiniMaxState(0, 0)), 3, true).getData()).getValue()
