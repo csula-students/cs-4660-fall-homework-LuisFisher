@@ -16,6 +16,10 @@ public class Node<T> {
     public double h = 0;
     public Node parent = null;
 
+    // used for alpha beta pruning
+    public int alpha;
+    public int beta;
+
     public Node(T data) {
         this.data = data;
     }
